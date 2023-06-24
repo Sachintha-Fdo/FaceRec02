@@ -3,7 +3,7 @@ import numpy as np
 import face_recognition
 import os
 from datetime import datetime
-
+#path to the Initial images
 path = 'primage'
 images = []
 classNames = []
@@ -24,7 +24,7 @@ def findEncodings(images):
         encode = face_recognition.face_encodings(img)[0]
         encodeList.append(encode)
     return encodeList
-
+#record the details of detected images
 def markTimeDate(name):
     with open('EnteringTime.csv','r+') as f:
         myDataList = f.readlines()
@@ -39,15 +39,15 @@ def markTimeDate(name):
         print(myDataList)
 
 encodeListKnown = findEncodings(images)
-#print('Encoding Completed')
-
+print('Encoding Completed')
+#capture the video
 cap = cv2.VideoCapture(0)
 
 while True:
     success, img = cap.read()
     imgS = cv2.resize(img,(0,0),None,0.25,0.25)
     imgS = cv2.cvtColor(imgS,cv2.COLOR_BGR2RGB)
-
+#marking the 128 points of the deteced faces
     facesCurFrame = face_recognition.face_locations(imgS)
     encodeCurFrame = face_recognition.face_encodings(imgS,facesCurFrame)
 
@@ -56,7 +56,7 @@ while True:
         faceDis = face_recognition.face_distance(encodeListKnown,encodeFace)
         print(faceDis)
         matchIndex = np.argmin(faceDis)
-
+#image tracking
         if matches[matchIndex]:
             name = classNames[matchIndex].upper()
             print(name)
